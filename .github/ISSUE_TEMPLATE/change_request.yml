@@ -1,0 +1,93 @@
+name: "📋 Change Request / คำขอเปลี่ยนแปลงงาน Data"
+description: "แจ้งคำขอเปลี่ยนแปลง/เพิ่มเติมงานด้าน Data (report, dashboard, model, pipeline)"
+title: "[Change Request] "
+labels: ["change-request", "needs-triage"]
+body:
+  - type: dropdown
+    id: request_type
+    attributes:
+      label: ประเภทคำขอ
+      options:
+        - เปลี่ยนแปลงของเดิม (Change existing)
+        - ขอเพิ่มใหม่ (New request)
+        - แจ้งปัญหา/ข้อมูลผิดพลาด (Bug / data issue)
+        - อื่นๆ
+    validations:
+      required: true
+
+  - type: input
+    id: affected_item
+    attributes:
+      label: Dashboard / Report / Model ที่เกี่ยวข้อง
+      description: ระบุชื่อ dashboard, report, หรือระบบที่ต้องการให้แก้ไข (ถ้าเป็นคำขอใหม่ ให้ระบุว่า "New")
+      placeholder: เช่น Sales Dashboard - Monthly View
+    validations:
+      required: true
+
+  - type: textarea
+    id: current_state
+    attributes:
+      label: สถานะปัจจุบันเป็นอย่างไร
+      description: อธิบายว่าตอนนี้เป็นอย่างไร มีปัญหาอะไร (แนบ screenshot ได้ถ้ามี)
+    validations:
+      required: true
+
+  - type: textarea
+    id: desired_outcome
+    attributes:
+      label: ต้องการให้เปลี่ยนเป็นอย่างไร (ผลลัพธ์ที่คาดหวัง)
+      description: อธิบายให้ชัดเจนที่สุดว่าต้องการเห็นอะไร เช่น field ที่ต้องการเพิ่ม, การคำนวณที่ต้องการ, ตัวกรองที่ต้องการ
+    validations:
+      required: true
+
+  - type: textarea
+    id: business_reason
+    attributes:
+      label: เหตุผลทางธุรกิจ / ผลกระทบถ้าไม่ทำ
+      description: ทำไมถึงต้องการสิ่งนี้ ใครเป็นคนใช้ผลลัพธ์ และจะเกิดอะไรขึ้นถ้ายังไม่ทำ
+    validations:
+      required: true
+
+  - type: dropdown
+    id: urgency
+    attributes:
+      label: ความเร่งด่วน
+      options:
+        - Low - ทำเมื่อมีเวลาว่าง
+        - Medium - ต้องการภายใน 2-4 สัปดาห์
+        - High - ต้องการภายในสัปดาห์นี้
+        - Critical - กระทบงานที่ทำอยู่ตอนนี้ (blocking)
+    validations:
+      required: true
+
+  - type: input
+    id: needed_by
+    attributes:
+      label: ต้องการให้เสร็จภายในวันที่ (ถ้ามี)
+      placeholder: เช่น 2026-10-15
+    validations:
+      required: false
+
+  - type: input
+    id: requester_team
+    attributes:
+      label: ทีม/แผนกของผู้ร้องขอ
+      placeholder: เช่น Marketing, Finance
+    validations:
+      required: true
+
+  - type: textarea
+    id: data_source
+    attributes:
+      label: แหล่งข้อมูลที่เกี่ยวข้อง / ลิงก์อ้างอิง (ถ้ามี)
+      description: ไฟล์ตัวอย่าง, ลิงก์ตาราง, หรือ report อื่นที่ใช้อ้างอิงได้
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: ยืนยันก่อนส่ง
+      options:
+        - label: ฉันได้อธิบายผลลัพธ์ที่ต้องการอย่างชัดเจนแล้ว (ไม่ใช่แค่ "ช่วยแก้ให้หน่อย")
+          required: true
