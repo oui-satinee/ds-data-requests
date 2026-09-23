@@ -68,11 +68,19 @@ body:
     validations:
       required: false
 
-  - type: input
+  - type: dropdown
     id: requester_team
     attributes:
       label: ทีม/แผนกของผู้ร้องขอ
-      placeholder: เช่น Marketing, Finance
+      options:
+        - Inventory Management
+        - Merchandise
+        - Operation
+        - Online
+        - Marketing
+        - CFO
+        - Accounting
+        - MD.
     validations:
       required: true
 
