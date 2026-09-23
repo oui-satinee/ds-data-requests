@@ -1,0 +1,78 @@
+name: Sync issue form answers to Project fields
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.PROJECTS_TOKEN }}
+          script: |
+            const projectId = "PVT_kwHOClZZ4s4Ajndu";
+            const requestTypeFieldId = "PVTSSF_lAHOClZZ4s4AjnduzhjDzVE";
+            const infoStatusFieldId = "PVTSSF_lAHOClZZ4s4AjnduzhjDzYs";
+            const departmentFieldId = "PVTSSF_lAHOClZZ4s4AjnduzhjDf34";
+            const needsInfoOptionId = "05871f82";
+
+            const requestTypeOptions = {
+              "เปลี่ยนแปลงของเดิม (Change existing)": "0cd3b30a",
+              "ขอเพิ่มใหม่ (New request)": "f29a33d8",
+              "แจ้งปัญหา/ข้อมูลผิดพลาด (Bug / data issue)": "4e79a27b",
+              "อื่นๆ": "58dc4cce",
+            };
+            const departmentOptions = {
+              "Inventory Management": "f70ba8c5",
+              "Merchandise": "5d75a95d",
+              "Operation": "63de6f40",
+              "Online": "8b31c8f8",
+              "Marketing": "5d4e73f1",
+              "CFO": "99c0219c",
+              "Accounting": "0ad66b1c",
+              "MD.": "f31ba3a1",
+            };
+
+            function getAnswer(body, label) {
+              const re = new RegExp(`### ${label}\\s*\\n+([\\s\\S]*?)(\\n### |$)`);
+              const m = body.match(re);
+              return m ? m[1].trim() : null;
+            }
+
+            const body = context.payload.issue.body || "";
+            const typeAnswer = getAnswer(body, "ประเภทคำขอ");
+            const teamAnswer = getAnswer(body, "ทีม/แผนกของผู้ร้องขอ");
+
+            const addResult = await github.graphql(
+              `mutation($projectId: ID!, $contentId: ID!) {
+                addProjectV2ItemById(input: {projectId: $projectId, contentId: $contentId}) {
+                  item { id }
+                }
+              }`,
+              { projectId, contentId: context.payload.issue.node_id }
+            );
+            const itemId = addResult.addProjectV2ItemById.item.id;
+
+            async function setField(fieldId, optionId) {
+              if (!optionId) return;
+              await github.graphql(
+                `mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) {
+                  updateProjectV2ItemFieldValue(input: {
+                    projectId: $projectId,
+                    itemId: $itemId,
+                    fieldId: $fieldId,
+                    value: { singleSelectOptionId: $optionId }
+                  }) { projectV2Item { id } }
+                }`,
+                { projectId, itemId, fieldId, optionId }
+              );
+            }
+
+            await setField(requestTypeFieldId, requestTypeOptions[typeAnswer]);
+            await setField(infoStatusFieldId, needsInfoOptionId);
+            await setField(departmentFieldId, departmentOptions[teamAnswer]);
