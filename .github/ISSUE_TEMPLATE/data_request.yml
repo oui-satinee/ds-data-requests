@@ -68,6 +68,14 @@ body:
     validations:
       required: false
 
+  - type: input
+    id: requester_name
+    attributes:
+      label: ชื่อ-นามสกุลผู้ร้องขอ
+      placeholder: เช่น สมชาย ใจดี
+    validations:
+      required: true
+
   - type: dropdown
     id: requester_team
     attributes:

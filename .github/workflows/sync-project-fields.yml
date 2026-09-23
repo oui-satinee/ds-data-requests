@@ -19,6 +19,7 @@ jobs:
             const requestTypeFieldId = "PVTSSF_lAHOClZZ4s4AjnduzhjDzVE";
             const infoStatusFieldId = "PVTSSF_lAHOClZZ4s4AjnduzhjDzYs";
             const departmentFieldId = "PVTSSF_lAHOClZZ4s4AjnduzhjDf34";
+            const ownerFieldId = "PVTF_lAHOClZZ4s4AjnduzhjDeZ0";
             const needsInfoOptionId = "05871f82";
 
             const requestTypeOptions = {
@@ -47,6 +48,7 @@ jobs:
             const body = context.payload.issue.body || "";
             const typeAnswer = getAnswer(body, "ประเภทคำขอ");
             const teamAnswer = getAnswer(body, "ทีม/แผนกของผู้ร้องขอ");
+            const nameAnswer = getAnswer(body, "ชื่อ-นามสกุลผู้ร้องขอ");
 
             const addResult = await github.graphql(
               `mutation($projectId: ID!, $contentId: ID!) {
@@ -73,6 +75,22 @@ jobs:
               );
             }
 
+            async function setTextField(fieldId, text) {
+              if (!text) return;
+              await github.graphql(
+                `mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $text: String!) {
+                  updateProjectV2ItemFieldValue(input: {
+                    projectId: $projectId,
+                    itemId: $itemId,
+                    fieldId: $fieldId,
+                    value: { text: $text }
+                  }) { projectV2Item { id } }
+                }`,
+                { projectId, itemId, fieldId, text }
+              );
+            }
+
             await setField(requestTypeFieldId, requestTypeOptions[typeAnswer]);
             await setField(infoStatusFieldId, needsInfoOptionId);
             await setField(departmentFieldId, departmentOptions[teamAnswer]);
+            await setTextField(ownerFieldId, nameAnswer);
