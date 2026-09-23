@@ -1,7 +1,7 @@
-name: "📋 Change Request / คำขอเปลี่ยนแปลงงาน Data"
-description: "แจ้งคำขอเปลี่ยนแปลง/เพิ่มเติมงานด้าน Data (report, dashboard, model, pipeline)"
-title: "[Change Request] "
-labels: ["change-request", "needs-triage"]
+name: "📋 Data Request / คำขอทำงาน Data (New / Change)"
+description: "แจ้งคำขอโปรเจกต์ใหม่ หรือขอเปลี่ยนแปลง/เพิ่มเติมงานด้าน Data (report, dashboard, model, pipeline)"
+title: "[Data Request] "
+labels: ["data-request", "needs-triage"]
 body:
   - type: dropdown
     id: request_type
@@ -19,7 +19,7 @@ body:
     id: affected_item
     attributes:
       label: Dashboard / Report / Model ที่เกี่ยวข้อง
-      description: ระบุชื่อ dashboard, report, หรือระบบที่ต้องการให้แก้ไข (ถ้าเป็นคำขอใหม่ ให้ระบุว่า "New")
+      description: ระบุชื่อ dashboard, report, หรือระบบที่ต้องการให้แก้ไข (ถ้าเป็นคำขอโปรเจกต์ใหม่ ให้ระบุว่า "New")
       placeholder: เช่น Sales Dashboard - Monthly View
     validations:
       required: true
@@ -28,7 +28,7 @@ body:
     id: current_state
     attributes:
       label: สถานะปัจจุบันเป็นอย่างไร
-      description: อธิบายว่าตอนนี้เป็นอย่างไร มีปัญหาอะไร (แนบ screenshot ได้ถ้ามี)
+      description: อธิบายว่าตอนนี้เป็นอย่างไร มีปัญหาอะไร (แนบ screenshot ได้ถ้ามี — ถ้าเป็นโปรเจกต์ใหม่ ใส่ "N/A" ได้)
     validations:
       required: true
 
