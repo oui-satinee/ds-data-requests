@@ -20,6 +20,7 @@ jobs:
             const infoStatusFieldId = "PVTSSF_lAHOClZZ4s4AjnduzhjDzYs";
             const departmentFieldId = "PVTSSF_lAHOClZZ4s4AjnduzhjDf34";
             const ownerFieldId = "PVTF_lAHOClZZ4s4AjnduzhjDeZ0";
+            const relatedItemFieldId = "PVTF_lAHOClZZ4s4AjnduzhjSEU0";
             const needsInfoOptionId = "05871f82";
 
             const requestTypeOptions = {
@@ -49,6 +50,7 @@ jobs:
             const typeAnswer = getAnswer(body, "ประเภทคำขอ");
             const teamAnswer = getAnswer(body, "ทีม/แผนกของผู้ร้องขอ");
             const nameAnswer = getAnswer(body, "ชื่อ-นามสกุลผู้ร้องขอ");
+            const relatedItemAnswer = getAnswer(body, "Dashboard / Report / Model ที่เกี่ยวข้อง");
 
             const addResult = await github.graphql(
               `mutation($projectId: ID!, $contentId: ID!) {
@@ -94,3 +96,4 @@ jobs:
             await setField(infoStatusFieldId, needsInfoOptionId);
             await setField(departmentFieldId, departmentOptions[teamAnswer]);
             await setTextField(ownerFieldId, nameAnswer);
+            await setTextField(relatedItemFieldId, relatedItemAnswer);
